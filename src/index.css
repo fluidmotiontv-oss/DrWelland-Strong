@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+:root {
+  background-color: #000;
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker 35s linear infinite;
+}
+
+.animate-ticker-paused {
+  animation-play-state: paused !important;
+}
+
+/* Clinical Night Mode: Deep Scotopic Red (630-660nm) for low-light sleep environments */
+.scotopic-clinical-night {
+  background-color: #050102 !important;
+  color: #fca5a5 !important;
+  transition: filter 0.3s ease, background-color 0.3s ease;
+}
+
+.scotopic-clinical-night [class*="bg-slate-900"],
+.scotopic-clinical-night [class*="bg-slate-950"],
+.scotopic-clinical-night [class*="bg-slate-800"] {
+  background-color: #0d0204 !important;
+  border-color: rgba(185, 28, 28, 0.45) !important;
+}
+
+.scotopic-clinical-night [class*="border-cyan-"],
+.scotopic-clinical-night [class*="border-purple-"],
+.scotopic-clinical-night [class*="border-slate-"] {
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+.scotopic-clinical-night [class*="text-cyan-"],
+.scotopic-clinical-night [class*="text-purple-"],
+.scotopic-clinical-night [class*="text-blue-"],
+.scotopic-clinical-night [class*="text-emerald-"],
+.scotopic-clinical-night [class*="text-teal-"] {
+  color: #f87171 !important;
+}
+
+.scotopic-clinical-night [class*="bg-cyan-500/10"],
+.scotopic-clinical-night [class*="bg-purple-500/10"],
+.scotopic-clinical-night [class*="bg-emerald-500/10"] {
+  background-color: rgba(153, 27, 27, 0.25) !important;
+}
+
+.scotopic-clinical-night [class*="from-cyan-"],
+.scotopic-clinical-night [class*="from-purple-"] {
+  --tw-gradient-from: #7f1d1d !important;
+  --tw-gradient-to: #450a0a !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+

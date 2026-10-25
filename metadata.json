@@ -1,0 +1,6 @@
+{
+  "name": "Dr. Welland-Strong",
+  "description": "The ultimate healer and complete holistic Star Trek style biometrics diagnosis, bodyfixer, mind care, and natural remedy advisor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "user": {
+      "title": "User Profile",
+      "description": "Global user identity for project sync.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "biometric_log": {
+      "title": "Biometric Diagnostic Log",
+      "description": "Cloud-synced health telemetry and diagnostic reports.",
+      "type": "object",
+      "properties": {
+        "logId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "heartRate": { "type": "number" },
+        "hrv": { "type": "number" },
+        "neuralCoherence": { "type": "number" },
+        "cellularVitality": { "type": "number" },
+        "stressIndex": { "type": "number" },
+        "triageLevel": { "type": "string" },
+        "overallVitality": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["logId", "ownerId", "heartRate"]
+    },
+    "clip_metadata": {
+      "title": "Intelligent Clip Metadata",
+      "description": "AI-generated cinematic data for a video clip. Note: Blobs remain local.",
+      "type": "object",
+      "properties": {
+        "clipId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "name": { "type": "string" },
+        "clipType": { "type": "string", "enum": ["video", "audio"] },
+        "trimIn": { "type": "number" },
+        "trimOut": { "type": "number" },
+        "volume": { "type": "number" },
+        "fadeIn": { "type": "number" },
+        "fadeOut": { "type": "number" },
+        "tags": { "type": "array" },
+        "mood": { "type": "string" },
+        "colorTag": { "type": "string" },
+        "blockIndex": { "type": "integer" },
+        "suggestedFileName": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clipId", "ownerId", "name"]
+    },
+    "project_state": {
+      "title": "Project Configuration",
+      "description": "The high-level state of a 54-minute production.",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "activeBlock": { "type": "integer" },
+        "blockDuration": { "type": "integer", "enum": [30, 60, 180] },
+        "clipSequence": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["projectId", "ownerId"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "user",
+      "description": "User profiles."
+    },
+    "/users/{uid}/biometricLogs/{logId}": {
+      "schema": "biometric_log",
+      "description": "Cloud-synced biometric diagnostic logs."
+    },
+    "/clips_metadata/{clipId}": {
+      "schema": "clip_metadata",
+      "description": "Cloud-synced intelligent metadata."
+    },
+    "/projects/{projectId}": {
+      "schema": "project_state",
+      "description": "Global project configurations."
+    }
+  }
+}

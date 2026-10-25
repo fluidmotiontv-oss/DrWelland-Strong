@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- User Profiles ---
+    match /users/{uid} {
+      allow get: if isSignedIn() && isValidId(uid);
+      allow create: if isSignedIn() && isValidId(uid) && request.auth.uid == uid && isValidUser(request.resource.data);
+      allow update: if isSignedIn() && isValidId(uid) && request.auth.uid == uid && isValidUser(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'updatedAt']);
+
+      // --- Biometric Logs Subcollection ---
+      match /biometricLogs/{logId} {
+        allow get: if isOwner(uid) && isValidId(logId);
+        allow list: if isOwner(uid);
+        allow create: if isOwner(uid) && isValidId(logId) && isValidBiometricLog(request.resource.data, uid);
+        allow update: if isOwner(uid) && isValidId(logId) && resource.data.ownerId == request.auth.uid
+          && isValidBiometricLog(request.resource.data, uid);
+        allow delete: if isOwner(uid) && isValidId(logId) && resource.data.ownerId == request.auth.uid;
+      }
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'createdAt'])
+        && data.uid == request.auth.uid
+        && data.email is string && data.email.size() <= 256;
+    }
+
+    function isValidBiometricLog(data, uid) {
+      return data.keys().hasAll(['logId', 'ownerId', 'heartRate'])
+        && data.logId is string && data.logId.size() <= 128
+        && data.ownerId == uid
+        && data.heartRate is number && data.heartRate >= 30 && data.heartRate <= 250
+        && (!('hrv' in data) || (data.hrv is number && data.hrv >= 0))
+        && (!('neuralCoherence' in data) || (data.neuralCoherence is number && data.neuralCoherence >= 0 && data.neuralCoherence <= 100))
+        && (!('cellularVitality' in data) || (data.cellularVitality is number && data.cellularVitality >= 0 && data.cellularVitality <= 100));
+    }
+
+    // --- Clip Metadata ---
+    match /clips_metadata/{clipId} {
+      allow get: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(clipId) && isValidClip(request.resource.data);
+      allow update: if isSignedIn() && isValidId(clipId) && resource.data.ownerId == request.auth.uid 
+        && isValidClip(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tags', 'mood', 'colorTag', 'blockIndex', 'suggestedFileName', 'updatedAt', 'trimIn', 'trimOut', 'volume', 'fadeIn', 'fadeOut']);
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    function isValidClip(data) {
+      return data.keys().hasAll(['clipId', 'ownerId', 'name'])
+        && data.clipId is string && data.clipId.size() <= 128
+        && data.ownerId == request.auth.uid
+        && data.name is string && data.name.size() <= 256
+        && (!('blockIndex' in data) || (data.blockIndex is int && data.blockIndex >= 0 && data.blockIndex <= 17))
+        && (!('trimIn' in data) || (data.trimIn is number && data.trimIn >= 0))
+        && (!('volume' in data) || (data.volume is number && data.volume >= 0 && data.volume <= 2));
+    }
+
+    // --- Project States ---
+    match /projects/{projectId} {
+      allow get: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(projectId) && isValidProject(request.resource.data);
+      allow update: if isSignedIn() && isValidId(projectId) && resource.data.ownerId == request.auth.uid
+        && isValidProject(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['activeBlock', 'clipSequence', 'updatedAt', 'blockDuration']);
+      allow delete: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['projectId', 'ownerId'])
+        && data.projectId is string && data.projectId.size() <= 128
+        && data.ownerId == request.auth.uid
+        && (!('activeBlock' in data) || (data.blockIndex is int && data.blockIndex >= 0 && data.blockIndex <= 17))
+        && (!('blockDuration' in data) || (data.blockDuration in [30, 60, 180]));
+    }
+  }
+}
