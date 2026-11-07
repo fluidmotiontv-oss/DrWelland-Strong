@@ -2,21 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Dr. Welland-Strong | Ultimate Holistic Healer & Biometrics Tricorder</title>
     <meta name="description" content="Starfleet-grade holistic biometrics diagnosis, bodyfixer, mind care, and natural remedy advisory system." />
-    
+
     <!-- OpenGraph -->
     <meta property="og:title" content="Dr. Welland-Strong" />
     <meta property="og:description" content="Ultimate holistic healer and Star Trek style biometrics diagnosis, bodyfixer, and natural remedy advisor." />
     <meta property="og:type" content="website" />
-    
+    <meta property="og:image" content="./icons/icon-512.png" />
+
     <!-- Mobile / Web App -->
     <meta name="theme-color" content="#030712" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Dr. Welland" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,8 +28,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script type="module" crossorigin src="./assets/index-DO6e0hFj.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Ct9AaNYP.css">
-  <link rel="manifest" href="./manifest.webmanifest"></head>
+
+    <!-- PIMP PACK: visuals + PWA -->
+    <link rel="stylesheet" href="./pimp.css" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <script src="./starfield.js" defer></script>
+  </head>
   <body class="bg-slate-950 text-slate-100 antialiased selection:cyan-500 selection:text-slate-950">
+    <div id="dws-splash" aria-hidden="true">
+      <div class="dws-splash-cross"></div>
+      <div class="dws-splash-text">DR. WELLAND-STRONG</div>
+      <div class="dws-splash-sub">STARFLEET MEDICAL TRICORDER</div>
+    </div>
     <div id="root"></div>
   </body>
 </html>
